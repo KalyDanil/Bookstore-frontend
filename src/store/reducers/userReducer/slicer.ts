@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { IRegistrationUser } from '../../../utils/types/user';
+import type { IRegistrationUser } from '../../../types/user';
 import { authorizationByTokenRequest } from './thunks';
 
 const authorizationAction = (

@@ -7,8 +7,7 @@ export const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     config.headers = {
-      // Authorization: `token ${localStorage.getItem('token')}`,
-      Authorization: 'asd',
+      Authorization: `token ${localStorage.getItem('token')}`,
     };
     return config;
   },

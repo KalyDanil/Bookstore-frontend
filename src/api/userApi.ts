@@ -1,8 +1,8 @@
 import { api } from '.';
-import type { IAvatarConfig, IEditPasswordReq, IEditReq, IRegistrationReq, IRegistrationUser } from '../utils/types/user';
+import type { IAvatarConfig, IAvatarUpload, IEditPasswordReq, IEditReq, IRegistrationReq, IRegistrationUser } from '../types/user';
 
-export const authorization = async (params: IRegistrationReq) => {
-  const res: IRegistrationUser = await api.get('auth/authorization', { params });
+export const authorization = async (body: IRegistrationReq) => {
+  const res: IRegistrationUser = await api.post('auth/authorization', body);
   return res;
 };
 
@@ -17,15 +17,15 @@ export const registration = async (body: IRegistrationReq) => {
 };
 
 export const edit = async (body: IEditReq) => {
-  const res: IRegistrationUser = await api.put('user/edit', body);
+  const res: IRegistrationUser = await api.put('users/edit-info', body);
   return res;
 };
 
 export const editPassword = async (body: IEditPasswordReq) => {
-  const res: IRegistrationUser = await api.put('user/edit-password', body);
+  const res: IRegistrationUser = await api.put('users/edit-password', body);
   return res;
 };
 
-export const uploadAvatar = async (file: FormData, config: IAvatarConfig) => {
-  api.post('user/avatar-upload', file, config);
+export const uploadAvatar = async (body: IAvatarUpload, config: IAvatarConfig) => {
+  api.post('users/avatar-upload', body);
 };

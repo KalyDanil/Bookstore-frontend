@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { userSlice, initialState } from './slicer';
-import type { IEditPasswordReq, IEditReq, IRegistrationReq } from '../../../utils/types/user';
+import type { IAvatarUpload, IEditPasswordReq, IEditReq, IRegistrationReq } from '../../../types/user';
 import { authorization, authorizationByToken, edit, editPassword, registration, uploadAvatar } from '../../../api/userApi';
 
 export const {
@@ -11,12 +11,12 @@ export const {
 } = userSlice.actions;
 
 export const authorizationRequest = createAsyncThunk('users/authorization',
-  async (params: IRegistrationReq, { dispatch }) => {
+  async (body: IRegistrationReq, { dispatch }) => {
     try {
-      const res = await authorization(params);
+      const res = await authorization(body);
       dispatch(authorizationAction(res));
       localStorage.setItem('token', res.token);
-      window.location.href = '/main?page=1';
+      window.location.href = '/profile';
     } catch (err) {
       console.log((err as Error).message);
       alert('Wrong password or email.');
@@ -47,7 +47,7 @@ export const registrationRequest = createAsyncThunk('users/registration',
     }
   });
 
-export const editRequest = createAsyncThunk('users/edit',
+export const editRequest = createAsyncThunk('users/edit-info',
   async (body: IEditReq) => {
     try {
       const res = await edit(body);
@@ -56,8 +56,11 @@ export const editRequest = createAsyncThunk('users/edit',
       if ((err as Error).message === 'Request failed with status code 400') {
         return alert('Missing required parameters.');
       }
+      if ((err as Error).message === 'Request failed with status code 406') {
+        return alert('Email must be a valid email.');
+      }
       console.log((err as Error).message);
-      alert('email must be a valid email');
+      alert((err as Error).message);
     }
   });
 
@@ -81,17 +84,14 @@ export const editPasswordRequest = createAsyncThunk('users/edit-password',
   });
 
 export const uploadAvatarRequest = createAsyncThunk('users/upload-avatar',
-  async (file: FormData) => {
+  async (body: IAvatarUpload) => {
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-      params: {
-        token: localStorage.getItem('token'),
-      },
     };
     try {
-      uploadAvatar(file, config);
+      uploadAvatar(body, config);
       return;
     } catch (err) {
       console.log((err as Error).message);
