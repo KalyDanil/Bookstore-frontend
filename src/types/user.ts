@@ -12,6 +12,12 @@ export interface IRegistrationUser {
   loadingTokenVerify: boolean;
   headerButton: string;
   editResponse: string;
+  emailErr: string[],
+  passwordErr: string[],
+  oldPasswordErr: string[],
+  emailIsWrong: boolean,
+  passwordIsWrong: boolean,
+  oldPasswordIsWrong: boolean,
 }
 
 export interface IDbUser {
@@ -36,9 +42,8 @@ export interface IEditReq {
 }
 
 export interface IEditPasswordReq {
-  newPassword: string;
+  password: string;
   oldPassword: string;
-  token: string | null;
 }
 
 export interface IAvatarUpload {

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const DivStyle = styled.div<{newPasswordIsMaking: boolean; informationIsEditing: boolean}>`
+export const DivStyle = styled.div<{newPasswordIsMaking: boolean; informationIsEditing: boolean; emailIsWrong: boolean; passwordIsWrong: boolean; replayIsWrong: boolean; oldPasswordIsWrong: boolean}>`
     position: relative;
     width: 36.5%;
     margin-left: 35.6%;
@@ -32,6 +32,11 @@ export const DivStyle = styled.div<{newPasswordIsMaking: boolean; informationIsE
             visibility: hidden;
         }
     }  
+}
+
+.emailEdit {
+    border: ${(props) => (props.emailIsWrong ? 'solid' : 'none')};
+    border-color: ${(props) => (props.emailIsWrong ? 'red' : '')};
 }
 
 .personalInformation__header {
@@ -109,6 +114,11 @@ export const DivStyle = styled.div<{newPasswordIsMaking: boolean; informationIsE
         top: 22px;
         left: 27px;
     }
+}
+
+.emailErr {
+    display: ${(props) => (props.emailIsWrong ? '' : 'none')};
+    color: red;
 }
 
 .personalInformation__button {
@@ -189,22 +199,6 @@ export const DivStyle = styled.div<{newPasswordIsMaking: boolean; informationIsE
     position: relative;
     padding-top: 0px;
     width: 100%;
-    input {
-        width: calc(100% - 64px);
-        height: 64px;
-        background: #F0F4EF;
-        border-radius: 16px;
-        border: none;
-        font-weight: 400;
-        font-size: 16px;
-        line-height: 28px;
-        color: #344966;
-        margin-top: 9px;
-        padding-left: 64px;
-        ::placeholder {
-            color: #B9BAC4;
-        } 
-    }
     img {
         position: absolute;
         top: 30px;
@@ -237,6 +231,45 @@ export const DivStyle = styled.div<{newPasswordIsMaking: boolean; informationIsE
         top: 22px;
         left: 27px;
     }
+}
+
+.oldPassword {
+    border: ${(props) => (props.oldPasswordIsWrong ? 'solid' : 'none')};
+    border-color: ${(props) => (props.oldPasswordIsWrong ? 'red' : '')};
+}
+
+.newPassword {
+    width: calc(100% - 64px);
+    height: 64px;
+    background: #F0F4EF;
+    border-radius: 16px;
+    border: ${(props) => (props.passwordIsWrong ? '' : 'none')};
+    border-color: red;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 28px;
+    color: #344966;
+    margin-top: 9px;
+    padding-left: 64px;
+    ::placeholder {
+        color: #B9BAC4;
+    } 
+}
+
+.oldPasswordErr{
+    margin: 0;
+    color: red;
+}
+
+.passwordErr {
+    margin: 0;
+    display: ${(props) => (props.passwordIsWrong ? '' : 'none')};
+    color: red;
+}
+
+.replayPasswordErr {
+    display: ${(props) => (props.replayIsWrong ? '' : 'none')};
+    color: red;
 }
 
 .personalInformation__passwordButton {

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const AuthorizationForm = styled.form`
+export const AuthorizationForm = styled.form<{emailIsWrong: boolean; passwordIsWrong: boolean}>`
     display: flex;
     width: 28.6%;
     flex-direction: column;
@@ -67,15 +67,29 @@ span {
 }
 
 .authorization__email {
+    border: ${(props) => (props.emailIsWrong ? 'solid' : 'none')};
+    border-color: red;
     ::placeholder {
         background: url(./assets/image/email.svg) no-repeat;
     }
 }
 
 .authorization__password {
+    border: ${(props) => (props.passwordIsWrong ? 'solid' : 'none')};
+    border-color: red;
     ::placeholder {
         background: url(./assets/image/hide.svg) no-repeat;
     }
+}
+
+.passwordErr {
+    display: ${(props) => (props.passwordIsWrong ? '' : 'none')};
+    color: red;
+}
+
+.emailErr {
+    display: ${(props) => (props.emailIsWrong ? '' : 'none')};
+    color: red;
 }
 
 .authorization__button {

@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import type { AxiosError } from 'axios';
 import { userSlice, initialState } from './slicer';
 import type { IAvatarUpload, IEditPasswordReq, IEditReq, IRegistrationReq } from '../../../types/user';
 import { authorization, authorizationByToken, edit, editPassword, registration, uploadAvatar } from '../../../api/userApi';
@@ -8,6 +9,9 @@ export const {
   refusalAction,
   avatarUploadAction,
   nameChangerAction,
+  emailErrAction,
+  passwordErrAction,
+  oldPasswordErrAction,
 } = userSlice.actions;
 
 export const authorizationRequest = createAsyncThunk('users/authorization',
@@ -19,7 +23,19 @@ export const authorizationRequest = createAsyncThunk('users/authorization',
       window.location.href = '/profile';
     } catch (err) {
       console.log((err as Error).message);
-      alert('Wrong password or email.');
+      const emailErr: string[] = [];
+      const passwordErr: string[] = [];
+      const errorArr = (err as AxiosError).response?.data;
+      for (const error of errorArr) {
+        if (error.email) {
+          emailErr.push(error.email);
+        }
+        if (error.password) {
+          passwordErr.push(error.password);
+        }
+      }
+      dispatch(emailErrAction(emailErr));
+      dispatch(passwordErrAction(passwordErr));
     }
   });
 
@@ -42,56 +58,68 @@ export const registrationRequest = createAsyncThunk('users/registration',
       window.location.href = '/main?page=1';
     } catch (err) {
       console.log((err as Error).message);
+      const emailErr: string[] = [];
+      const passwordErr: string[] = [];
+      const errorArr = (err as AxiosError).response?.data;
+      for (const error of errorArr) {
+        if (error.email) {
+          emailErr.push(error.email);
+        }
+        if (error.password) {
+          passwordErr.push(error.password);
+        }
+      }
       dispatch(authorizationAction(initialState));
-      alert('Such emails are not exist or wrong password. Password must have at least one capital letter, one symbol from (- _ + = ! ? % / | @ # $ № . ,) or one number, and its length must be at least 8.');
+      dispatch(emailErrAction(emailErr));
+      dispatch(passwordErrAction(passwordErr));
     }
   });
 
 export const editRequest = createAsyncThunk('users/edit-info',
-  async (body: IEditReq) => {
+  async (body: IEditReq, { dispatch }) => {
     try {
       const res = await edit(body);
       if (res) { window.location.reload(); }
     } catch (err) {
-      if ((err as Error).message === 'Request failed with status code 400') {
-        return alert('Missing required parameters.');
-      }
-      if ((err as Error).message === 'Request failed with status code 406') {
-        return alert('Email must be a valid email.');
-      }
       console.log((err as Error).message);
-      alert((err as Error).message);
+      const emailErr: string[] = [];
+      const errorArr = (err as AxiosError).response?.data;
+      for (const error of errorArr) {
+        if (error.email) {
+          emailErr.push(error.email);
+        }
+      }
+      dispatch(emailErrAction(emailErr));
     }
   });
 
 export const editPasswordRequest = createAsyncThunk('users/edit-password',
-  async (body: IEditPasswordReq) => {
+  async (body: IEditPasswordReq, { dispatch }) => {
     try {
-      await editPassword(body);
-      window.location.reload();
+      const res = await editPassword(body);
+      if (res) { window.location.reload(); }
     } catch (err) {
-      console.log((err as Error).message);
-      if ((err as Error).message === 'Request failed with status code 400') {
-        return alert('Missing required parameters.');
+      console.log((err as AxiosError).response?.data);
+      const passwordErr: string[] = [];
+      const oldPasswordErr: string[] = [];
+      const errorArr = (err as AxiosError).response?.data;
+      for (const error of errorArr) {
+        if (error.password) {
+          passwordErr.push(error.password);
+        }
+        if (error.oldPassword) {
+          oldPasswordErr.push(error.oldPassword);
+        }
       }
-      if ((err as Error).message === 'Request failed with status code 404') {
-        return alert('Wrong old password.');
-      }
-      if ((err as Error).message === 'Request failed with status code 406') {
-        return alert('Such emails are not exist or wrong password. Password must have at least one capital letter, one symbol from (- _ + = ! ? % / | @ # $ № . ,) or one number, and its length must be at least 8.');
-      }
+      dispatch(oldPasswordErrAction(oldPasswordErr));
+      dispatch(passwordErrAction(passwordErr));
     }
   });
 
 export const uploadAvatarRequest = createAsyncThunk('users/upload-avatar',
   async (body: IAvatarUpload) => {
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    };
     try {
-      uploadAvatar(body, config);
+      uploadAvatar(body);
       return;
     } catch (err) {
       console.log((err as Error).message);

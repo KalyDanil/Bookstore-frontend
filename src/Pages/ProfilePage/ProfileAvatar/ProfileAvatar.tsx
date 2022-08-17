@@ -13,7 +13,7 @@ const ProfileAvatar: React.FC = () => {
       dispatch(avatarUploadAction(e.target.files[0].name));
       const fileReader = new FileReader();
       fileReader.readAsDataURL(e.target.files[0]);
-      fileReader.onload = async function () {
+      fileReader.onload = async () => {
         const image = fileReader.result;
         const body = {
           image,
@@ -29,7 +29,7 @@ const ProfileAvatar: React.FC = () => {
     <ProfileAvatarStyle>
       <img className="profile__avatar-default" src={`http://localhost:4000/uploads/${user.avatar}`} alt="defaultAvatar" />
       <div className="profile__avatar-loadDiv">
-        <input type="file" id="input__file" className="profile__avatar-load" onChange={uploadAvatar} multiple />
+        <input type="file" id="input__file" className="profile__avatar-load" accept=".png, .jpg, .jpeg, .svg" onChange={uploadAvatar} multiple />
         <label htmlFor="input__file">
           <img className="profile__avatar-camera" src="./assets/image/camera.svg" alt="Выбрать файл" />
         </label>

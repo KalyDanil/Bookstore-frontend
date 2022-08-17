@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const RegistrationForm = styled.form`
+export const RegistrationForm = styled.form<{passwordIsWrong: boolean; emailIsWrong: boolean}>`
     display: flex;
     width: 28.6%;
     flex-direction: column;
@@ -65,13 +65,31 @@ span {
     }
 }
 
+.emailErr {
+    display: ${(props) => (props.emailIsWrong ? '' : 'none')};
+    color: red;
+}
+
+.passwordErr {
+    display: ${(props) => (props.passwordIsWrong ? '' : 'none')};
+    color: red;
+}
+
+.replayErr {
+    color: red;
+}
+
 .registration__email {
+    border: ${(props) => (props.emailIsWrong ? 'solid' : 'none')};
+    border-color: red;
     ::placeholder {
         background: url(./assets/image/email.svg) no-repeat;
     }
 }
 
 .registration__password {
+    border: ${(props) => (props.passwordIsWrong ? 'solid' : 'none')};
+    border-color: ${(props) => (props.passwordIsWrong ? 'red' : '')};
     ::placeholder {
         background: url(./assets/image/hide.svg) no-repeat;
     }

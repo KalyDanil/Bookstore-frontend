@@ -28,6 +28,36 @@ const nameChangerAction = (state: IRegistrationUser, action: PayloadAction<strin
   state.headerButton = action.payload;
 };
 
+const emailErrAction = (state: IRegistrationUser, action: PayloadAction<string[]>) => {
+  if (action.payload.length === 0) {
+    state.emailErr = action.payload;
+    state.emailIsWrong = false;
+    return;
+  }
+  state.emailErr = action.payload;
+  state.emailIsWrong = true;
+};
+
+const oldPasswordErrAction = (state: IRegistrationUser, action: PayloadAction<string[]>) => {
+  if (action.payload.length === 0) {
+    state.oldPasswordErr = action.payload;
+    state.oldPasswordIsWrong = false;
+    return;
+  }
+  state.oldPasswordErr = action.payload;
+  state.oldPasswordIsWrong = true;
+};
+
+const passwordErrAction = (state: IRegistrationUser, action: PayloadAction<string[]>) => {
+  if (action.payload.length === 0) {
+    state.passwordErr = action.payload;
+    state.passwordIsWrong = false;
+    return;
+  }
+  state.passwordErr = action.payload;
+  state.passwordIsWrong = true;
+};
+
 export const initialState: IRegistrationUser = {
   id: 0,
   fullName: '',
@@ -40,6 +70,12 @@ export const initialState: IRegistrationUser = {
   loadingTokenVerify: false,
   headerButton: 'LogIn',
   editResponse: '',
+  emailErr: [],
+  passwordErr: [],
+  oldPasswordErr: [],
+  emailIsWrong: false,
+  passwordIsWrong: false,
+  oldPasswordIsWrong: false,
 };
 
 export const userSlice = createSlice({
@@ -50,6 +86,9 @@ export const userSlice = createSlice({
     refusalAction,
     avatarUploadAction,
     nameChangerAction,
+    emailErrAction,
+    passwordErrAction,
+    oldPasswordErrAction,
   },
   extraReducers: (builder) => {
     builder

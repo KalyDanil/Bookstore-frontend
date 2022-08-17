@@ -1,5 +1,5 @@
 import { api } from '.';
-import type { IAvatarConfig, IAvatarUpload, IEditPasswordReq, IEditReq, IRegistrationReq, IRegistrationUser } from '../types/user';
+import type { IAvatarUpload, IEditPasswordReq, IEditReq, IRegistrationReq, IRegistrationUser } from '../types/user';
 
 export const authorization = async (body: IRegistrationReq) => {
   const res: IRegistrationUser = await api.post('auth/authorization', body);
@@ -26,6 +26,6 @@ export const editPassword = async (body: IEditPasswordReq) => {
   return res;
 };
 
-export const uploadAvatar = async (body: IAvatarUpload, config: IAvatarConfig) => {
+export const uploadAvatar = async (body: IAvatarUpload) => {
   api.post('users/avatar-upload', body);
 };
