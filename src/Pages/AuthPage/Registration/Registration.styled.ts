@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const RegistrationForm = styled.form<{passwordIsWrong: boolean; emailIsWrong: boolean}>`
+export const RegistrationForm = styled.form<{emailIsWrong: boolean; passwordValidation: string | undefined; emailValidation: string | undefined; passwordRepeatValidation: string | undefined}>`
     display: flex;
     width: 28.6%;
     flex-direction: column;
@@ -66,12 +66,10 @@ span {
 }
 
 .emailErr {
-    display: ${(props) => (props.emailIsWrong ? '' : 'none')};
     color: red;
 }
 
 .passwordErr {
-    display: ${(props) => (props.passwordIsWrong ? '' : 'none')};
     color: red;
 }
 
@@ -80,7 +78,7 @@ span {
 }
 
 .registration__email {
-    border: ${(props) => (props.emailIsWrong ? 'solid' : 'none')};
+    border: ${(props) => (props.emailValidation || props.emailIsWrong ? 'solid' : 'none')};
     border-color: red;
     ::placeholder {
         background: url(./assets/image/email.svg) no-repeat;
@@ -88,8 +86,16 @@ span {
 }
 
 .registration__password {
-    border: ${(props) => (props.passwordIsWrong ? 'solid' : 'none')};
-    border-color: ${(props) => (props.passwordIsWrong ? 'red' : '')};
+    border: ${(props) => (props.passwordValidation ? 'solid' : 'none')};
+    border-color: ${(props) => (props.passwordValidation ? 'red' : '')};
+    ::placeholder {
+        background: url(./assets/image/hide.svg) no-repeat;
+    }
+}
+
+.registration__passwordRepeat {
+    border: ${(props) => (props.passwordRepeatValidation ? 'solid' : 'none')};
+    border-color: ${(props) => (props.passwordRepeatValidation ? 'red' : '')};
     ::placeholder {
         background: url(./assets/image/hide.svg) no-repeat;
     }

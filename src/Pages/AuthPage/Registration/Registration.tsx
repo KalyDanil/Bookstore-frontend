@@ -1,77 +1,54 @@
-import React, { useState } from 'react';
+import { ErrorMessage, Formik } from 'formik';
+import React from 'react';
 import { registrationRequest } from '../../../store/reducers/userReducer/thunks';
 import { useAppDispatch } from '../../../utils/hooks/useAppDispatch';
 import { useAppSelector } from '../../../utils/hooks/useAppSelector';
+import { registrationShape } from '../../../utils/schemas/auth';
 import { RegistrationForm } from './Registration.styled';
 
 const Registration: React.FC = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordReplay, setPasswordReplay] = useState('');
-  const [wrongReplay, setwrongReplay] = useState('');
-
-  const registration = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const currentUser = {
-      email,
-      password,
-    };
-
-    if (password !== passwordReplay) {
-      setPasswordReplay('');
-      setPassword('');
-      setwrongReplay('passwords are not the same');
-      return;
-    }
-
-    if (password === passwordReplay) {
-      setwrongReplay('');
-    }
-
-    dispatch(registrationRequest(currentUser));
-  };
-
-  const emailInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const passwordInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
-  const passwordReplayInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPasswordReplay(e.target.value);
-  };
-
   const emailErr = (user.emailErr).map((item, index) => {
     return (<span className="emailErr" key={index}>{item}</span>);
   });
-
-  const passwordErr = (user.passwordErr).map((item, index) => {
-    return (<span className="passwordErr" key={index}>{item}</span>);
-  });
-
   return (
-    // eslint-disable-next-line
-    <RegistrationForm onSubmit={registration} passwordIsWrong={user.passwordIsWrong} emailIsWrong={user.emailIsWrong}>
-      <h1 className="registration__header">Sing Up</h1>
-      <input className="registration__input registration__email" type="text" placeholder="Email" onChange={emailInput} value={email} />
-      <span>Enter your email</span>
-      {emailErr}
-      <input className="registration__input registration__password" type="password" placeholder="Password" onChange={passwordInput} value={password} />
-      <span>Enter your password</span>
-      <span className="replayErr">{wrongReplay}</span>
-      {passwordErr}
-      <input className="registration__input registration__password" type="password" placeholder="Password replay" onChange={passwordReplayInput} value={passwordReplay} />
-      <span>Repeat your password without errors</span>
-      <span className="replayErr">{wrongReplay}</span>
-      {passwordErr}
-      <input className="registration__button" type="submit" value="Sing Up" />
-      <img className="authPicture" src="./assets/image/registrationPicture.svg" alt="auth picture" />
-    </RegistrationForm>
+    <div>
+      <Formik
+        initialValues={{
+          email: '',
+          password: '',
+          repeat: '',
+        }}
+        validationSchema={registrationShape}
+        onSubmit={(values) => {
+          const currentUser = {
+            email: values.email,
+            password: values.password,
+          };
+          dispatch(registrationRequest(currentUser));
+        }}
+      >
+        {({ handleChange, handleSubmit, errors, values, isSubmitting }) => (
+        // eslint-disable-next-line
+        <RegistrationForm onSubmit={handleSubmit} emailIsWrong={user.emailIsWrong} passwordValidation={errors.password} emailValidation={errors.email} passwordRepeatValidation={errors.repeat}>
+          <h1 className="registration__header">Sing Up</h1>
+          <input className="registration__input registration__email" name="email" type="text" placeholder="Email" onChange={handleChange} value={values.email} />
+          <span>Enter your email</span>
+          <ErrorMessage name="email" className="emailErr" component="div" />
+          {emailErr}
+          <input className="registration__input registration__password" name="password" type="password" placeholder="Password" autoComplete="false" onChange={handleChange} value={values.password} />
+          <span>Enter your password</span>
+          <ErrorMessage name="password" className="passwordErr" component="div" />
+          <input className="registration__input registration__passwordRepeat" name="repeat" type="password" placeholder="Password repeat" autoComplete="false" onChange={handleChange} value={values.repeat} />
+          <span>Repeat your password without errors</span>
+          <ErrorMessage name="repeat" className="passwordErr" component="div" />
+          <input className="registration__button" type="submit" value="Sing Up" disabled={isSubmitting} />
+          <img className="authPicture" src="./assets/image/registrationPicture.svg" alt="auth picture" />
+        </RegistrationForm>
+        )}
+      </Formik>
+    </div>
   );
 };
 

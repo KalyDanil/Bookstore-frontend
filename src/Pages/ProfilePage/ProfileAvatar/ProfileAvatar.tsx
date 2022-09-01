@@ -27,7 +27,7 @@ const ProfileAvatar: React.FC = () => {
 
   return (
     <ProfileAvatarStyle>
-      <img className="profile__avatar-default" src={`http://localhost:4000/uploads/${user.avatar}`} alt="defaultAvatar" />
+      <img className="profile__avatar-default" src={user.avatar} alt="defaultAvatar" />
       <div className="profile__avatar-loadDiv">
         <input type="file" id="input__file" className="profile__avatar-load" accept=".png, .jpg, .jpeg, .svg" onChange={uploadAvatar} multiple />
         <label htmlFor="input__file">

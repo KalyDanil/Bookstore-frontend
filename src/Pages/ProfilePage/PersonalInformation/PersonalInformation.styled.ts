@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const DivStyle = styled.div<{newPasswordIsMaking: boolean; informationIsEditing: boolean; emailIsWrong: boolean; passwordIsWrong: boolean; replayIsWrong: boolean; oldPasswordIsWrong: boolean}>`
+export const InfoForm = styled.form<{emailValidation: string | undefined; informationIsEditing: boolean; emailIsWrong: boolean}>`
     position: relative;
     width: 36.5%;
     margin-left: 35.6%;
@@ -35,8 +35,8 @@ export const DivStyle = styled.div<{newPasswordIsMaking: boolean; informationIsE
 }
 
 .emailEdit {
-    border: ${(props) => (props.emailIsWrong ? 'solid' : 'none')};
-    border-color: ${(props) => (props.emailIsWrong ? 'red' : '')};
+    border: ${(props) => (props.emailIsWrong || props.emailValidation ? 'solid' : 'none')};
+    border-color: red;
 }
 
 .personalInformation__header {
@@ -117,7 +117,6 @@ export const DivStyle = styled.div<{newPasswordIsMaking: boolean; informationIsE
 }
 
 .emailErr {
-    display: ${(props) => (props.emailIsWrong ? '' : 'none')};
     color: red;
 }
 
@@ -137,6 +136,21 @@ export const DivStyle = styled.div<{newPasswordIsMaking: boolean; informationIsE
         width: 58%;
     }
 }
+`;
+
+export const PasswordForm = styled.form<{ newPasswordIsMaking: boolean; passwordValidation: string | undefined; oldPasswordValidation: string | undefined; oldPasswordIsWrong: boolean; repeatValidation: string | undefined}>`
+    position: relative;
+    width: 36.5%;
+    margin-left: 35.6%;
+    margin-top: 60px;
+    @media screen and (min-width: 833px) and (max-width:1439px) {
+        width: 63.4%;
+    }
+    @media screen and (min-width: 320px) and (max-width:833px) {
+        width: 90.6%;
+        margin-left: 4.6%;
+        margin-top: 30px;
+    }
 
 .personalInformation__passwordHeader {
     display: flex;
@@ -173,6 +187,26 @@ export const DivStyle = styled.div<{newPasswordIsMaking: boolean; informationIsE
             line-height: 18px;
         }
     }
+}
+
+.personalInformation__inputText {
+    width: calc(100% - 64px);
+    height: 34px;
+    background: #F0F4EF;
+    border-radius: 16px;
+    border: none;
+    padding-left: 64px;
+    padding-top: 30px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 28px;
+    color: #344966;
+    margin-bottom: 20px;
+    :focus-within {
+        ::placeholder {
+            visibility: hidden;
+        }
+    }  
 }
 
 .personalInformation__oldPasswordStatic {
@@ -234,8 +268,8 @@ export const DivStyle = styled.div<{newPasswordIsMaking: boolean; informationIsE
 }
 
 .oldPassword {
-    border: ${(props) => (props.oldPasswordIsWrong ? 'solid' : 'none')};
-    border-color: ${(props) => (props.oldPasswordIsWrong ? 'red' : '')};
+    border: ${(props) => (props.oldPasswordIsWrong || props.oldPasswordValidation ? 'solid' : 'none')};
+    border-color: ${(props) => (props.oldPasswordIsWrong || props.oldPasswordValidation ? 'red' : '')};
 }
 
 .newPassword {
@@ -243,7 +277,25 @@ export const DivStyle = styled.div<{newPasswordIsMaking: boolean; informationIsE
     height: 64px;
     background: #F0F4EF;
     border-radius: 16px;
-    border: ${(props) => (props.passwordIsWrong ? '' : 'none')};
+    border: ${(props) => (props.passwordValidation ? '' : 'none')};
+    border-color: red;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 28px;
+    color: #344966;
+    margin-top: 9px;
+    padding-left: 64px;
+    ::placeholder {
+        color: #B9BAC4;
+    } 
+}
+
+.passwordRepeat {
+    width: calc(100% - 64px);
+    height: 64px;
+    background: #F0F4EF;
+    border-radius: 16px;
+    border: ${(props) => (props.repeatValidation ? '' : 'none')};
     border-color: red;
     font-weight: 400;
     font-size: 16px;
@@ -263,12 +315,10 @@ export const DivStyle = styled.div<{newPasswordIsMaking: boolean; informationIsE
 
 .passwordErr {
     margin: 0;
-    display: ${(props) => (props.passwordIsWrong ? '' : 'none')};
     color: red;
 }
 
 .replayPasswordErr {
-    display: ${(props) => (props.replayIsWrong ? '' : 'none')};
     color: red;
 }
 

@@ -1,9 +1,9 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { IRegistrationUser } from '../../../types/user';
+import type { IRegistrationUser, IUser } from '../../../types/user';
 import { authorizationByTokenRequest } from './thunks';
 
 const authorizationAction = (
-  state: IRegistrationUser, action: PayloadAction<IRegistrationUser>,
+  state: IRegistrationUser, action: PayloadAction<IUser>,
 ) => {
   state.id = action.payload.id;
   state.fullName = action.payload.fullName;

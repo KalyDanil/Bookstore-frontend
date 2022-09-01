@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 import type { AxiosError } from 'axios';
-import { userSlice, initialState } from './slicer';
+import { userSlice } from './slicer';
 import type { IAvatarUpload, IEditPasswordReq, IEditReq, IRegistrationReq } from '../../../types/user';
 import { authorization, authorizationByToken, edit, editPassword, registration, uploadAvatar } from '../../../api/userApi';
 
@@ -18,20 +19,21 @@ export const authorizationRequest = createAsyncThunk('users/authorization',
   async (body: IRegistrationReq, { dispatch }) => {
     try {
       const res = await authorization(body);
-      dispatch(authorizationAction(res));
+      dispatch(authorizationAction(res.user));
       localStorage.setItem('token', res.token);
-      window.location.href = '/profile';
+      window.location.href = '/main';
     } catch (err) {
-      console.log((err as Error).message);
+      console.log((err as Error));
       const emailErr: string[] = [];
       const passwordErr: string[] = [];
-      const errorArr = (err as AxiosError).response?.data;
+      const errorArr = (err as AxiosError).response?.data.data;
+      console.log(errorArr);
       for (const error of errorArr) {
-        if (error.email) {
-          emailErr.push(error.email);
+        if (error.key === 'email') {
+          emailErr.push(error.message);
         }
-        if (error.password) {
-          passwordErr.push(error.password);
+        if (error.key === 'password') {
+          passwordErr.push(error.message);
         }
       }
       dispatch(emailErrAction(emailErr));
@@ -45,7 +47,7 @@ export const authorizationByTokenRequest = createAsyncThunk('users/authorization
       const res = await authorizationByToken();
       dispatch(authorizationAction(res));
     } catch (err) {
-      console.log((err as Error).message);
+      toast((err as Error).message);
     }
   });
 
@@ -53,25 +55,19 @@ export const registrationRequest = createAsyncThunk('users/registration',
   async (body: IRegistrationReq, { dispatch }) => {
     try {
       const res = await registration(body);
-      dispatch(authorizationAction(res));
+      dispatch(authorizationAction(res.user));
       localStorage.setItem('token', res.token);
       window.location.href = '/main?page=1';
     } catch (err) {
       console.log((err as Error).message);
       const emailErr: string[] = [];
-      const passwordErr: string[] = [];
-      const errorArr = (err as AxiosError).response?.data;
+      const errorArr = (err as AxiosError).response?.data.data;
       for (const error of errorArr) {
-        if (error.email) {
-          emailErr.push(error.email);
-        }
-        if (error.password) {
-          passwordErr.push(error.password);
+        if (error.key === 'email') {
+          emailErr.push(error.message);
         }
       }
-      dispatch(authorizationAction(initialState));
       dispatch(emailErrAction(emailErr));
-      dispatch(passwordErrAction(passwordErr));
     }
   });
 
@@ -83,10 +79,10 @@ export const editRequest = createAsyncThunk('users/edit-info',
     } catch (err) {
       console.log((err as Error).message);
       const emailErr: string[] = [];
-      const errorArr = (err as AxiosError).response?.data;
+      const errorArr = (err as AxiosError).response?.data.data;
       for (const error of errorArr) {
-        if (error.email) {
-          emailErr.push(error.email);
+        if (error.key === 'email') {
+          emailErr.push(error.message);
         }
       }
       dispatch(emailErrAction(emailErr));
@@ -100,19 +96,14 @@ export const editPasswordRequest = createAsyncThunk('users/edit-password',
       if (res) { window.location.reload(); }
     } catch (err) {
       console.log((err as AxiosError).response?.data);
-      const passwordErr: string[] = [];
       const oldPasswordErr: string[] = [];
-      const errorArr = (err as AxiosError).response?.data;
+      const errorArr = (err as AxiosError).response?.data.data;
       for (const error of errorArr) {
-        if (error.password) {
-          passwordErr.push(error.password);
-        }
-        if (error.oldPassword) {
-          oldPasswordErr.push(error.oldPassword);
+        if (error.key === 'password') {
+          oldPasswordErr.push(error.message);
         }
       }
       dispatch(oldPasswordErrAction(oldPasswordErr));
-      dispatch(passwordErrAction(passwordErr));
     }
   });
 
@@ -122,7 +113,6 @@ export const uploadAvatarRequest = createAsyncThunk('users/upload-avatar',
       uploadAvatar(body);
       return;
     } catch (err) {
-      console.log((err as Error).message);
-      alert('Missing required file parameter.');
+      toast((err as Error).message);
     }
   });

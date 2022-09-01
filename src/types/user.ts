@@ -12,12 +12,36 @@ export interface IRegistrationUser {
   loadingTokenVerify: boolean;
   headerButton: string;
   editResponse: string;
-  emailErr: string[],
-  passwordErr: string[],
-  oldPasswordErr: string[],
-  emailIsWrong: boolean,
-  passwordIsWrong: boolean,
-  oldPasswordIsWrong: boolean,
+  emailErr: string[];
+  passwordErr: string[];
+  oldPasswordErr: string[];
+  emailIsWrong: boolean;
+  passwordIsWrong: boolean;
+  oldPasswordIsWrong: boolean;
+}
+
+export interface IUser {
+  id: number;
+  fullName: string;
+  dob: string;
+  email: string;
+  password: string;
+  avatar: string;
+  tokenIsValid: boolean;
+  loadingTokenVerify: boolean;
+  headerButton: string;
+  editResponse: string;
+  emailErr: string[];
+  passwordErr: string[];
+  oldPasswordErr: string[];
+  emailIsWrong: boolean;
+  passwordIsWrong: boolean;
+  oldPasswordIsWrong: boolean;
+}
+
+export interface IDbUserAnswer {
+  user: IUser;
+  token: string;
 }
 
 export interface IDbUser {
@@ -47,8 +71,8 @@ export interface IEditPasswordReq {
 }
 
 export interface IAvatarUpload {
-  image: string | ArrayBuffer | null,
-  imageName: string,
+  image: string | ArrayBuffer | null;
+  imageName: string;
 }
 
 export interface IAvatarConfig {
