@@ -15,6 +15,7 @@ import Registration from './Pages/AuthPage/Registration/Registration';
 import { authorizationByTokenRequest } from './store/reducers/userReducer/thunks';
 import { useAppSelector } from './utils/hooks/useAppSelector';
 import { useAppDispatch } from './utils/hooks/useAppDispatch';
+import LogRoute from './Router/LogRoute';
 
 const App: React.FC = () => {
   const user = useAppSelector((state) => state.user);
@@ -36,8 +37,14 @@ const App: React.FC = () => {
         <Route path="/" element={<Navigate to="/main?page=1" />} />
         <Route path="/main" element={<MainPage />} />
         <Route path="/liked-books" element={<LikedBooks />} />
-        <Route path="/registration" element={<Registration />} />
-        <Route path="/authorization" element={<Authorization />} />
+        <Route path="/authorization" element={<LogRoute />}>
+          <Route path="/authorization" element={<Authorization />} />
+        </Route>
+        <Route path="/registration" element={<LogRoute />}>
+          <Route path="/registration" element={<Registration />} />
+        </Route>
+        {/* <Route path="/registration" element={<Registration />} />
+        <Route path="/authorization" element={<Authorization />} /> */}
         <Route path="/bookPage:id" element={<BookPage />} />
         <Route path="/profile" element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
